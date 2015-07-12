@@ -11,7 +11,25 @@
 
 ## Usage
 
-TODO: Add documentation
+Define partials by adding `partials: true` to your file metadata. Use them through calling `partials[<partialname>`:
+
+### src/name.swig
+``` swig
+---
+partial: true
+name: Default Name
+---
+<div class="name">
+  <h2>Name: {{ name }}</h2>
+</div>
+```
+
+### src/index.html.swig
+``` swig
+<div class="name-wrapper">
+  {{ partials['name']({name:'Real Name'})|safe }}
+</div>
+```
 
 ### CLI
 

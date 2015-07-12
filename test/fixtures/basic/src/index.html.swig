@@ -1,0 +1,8 @@
+---
+title: Hello, World!
+---
+<h1>{{ title }}</h1>
+
+<div class="partial-wrapper">
+{{ partials['card']({name:'Updated Name!'})|safe }}
+</div>

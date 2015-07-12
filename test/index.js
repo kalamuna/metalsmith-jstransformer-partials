@@ -3,8 +3,9 @@ var partials = require('../')
 var jstransformer = require('metalsmith-jstransformer')
 var Metalsmith = require('metalsmith')
 
-function test (name, options) {
-  /* globals it describe */
+/* globals it describe */
+
+function test (name) {
   it(name, function (done) {
     Metalsmith('test/fixtures/' + name)
       .use(partials())
@@ -20,5 +21,6 @@ function test (name, options) {
 }
 
 describe('metalsmith-jstransformer-partials', function (done) {
-  test('basic', done)
+  test('basic')
+  test('call-partial')
 })

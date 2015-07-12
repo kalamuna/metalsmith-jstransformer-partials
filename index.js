@@ -3,32 +3,64 @@ var toTransformer = require('inputformat-to-jstransformer')
 var async = require('async')
 var extend = require('extend')
 var clone = require('clone')
-var transformers = {}
-
-/**
- * Get the transformer from the given name.
- *
- * @return The JSTransformer; null if it doesn't exist.
- */
-function getTransformer (name) {
-  if (name in transformers) {
-    return transformers[name]
-  }
-  var transformer = toTransformer(name)
-  transformers[name] = transformer ? jstransformer(transformer) : false
-  return transformers[name]
-}
+var path = require('path')
 
 module.exports = function (opts) {
+  var transformers = {}
+
+  /**
+   * Get the transformer from the given name.
+   *
+   * @return The JSTransformer; null if it doesn't exist.
+   */
+  function getTransformer (name) {
+    if (name in transformers) {
+      return transformers[name]
+    }
+    var transformer = toTransformer(name)
+    transformers[name] = transformer ? jstransformer(transformer) : false
+    return transformers[name]
+  }
+
   return function (files, metalsmith, done) {
     // Load the default partials.
     var metadata = metalsmith.metadata()
     metadata.partials = extend({}, metadata.partials || {}, opts || {})
 
     /**
+     * Renders a partial from the given name.
+     */
+    function renderPartial (name) {
+      var part = metalsmith.metadata().partials
+      if (!name) {
+        throw new Error('When calling .partial(), name is required.')
+      }
+      if (name in part) {
+        // Construct the partial function arguments.
+        var fnarray = []
+        for (var i = 1; i < arguments.length; i++) {
+          fnarray.push(arguments[i])
+        }
+
+        // Call the partial function with the given array arguments.
+        return part[name].apply(metalsmith.metadata(), fnarray)
+      } else {
+        throw new Error('The partial "' + name + '" was not found.')
+      }
+    }
+
+    /**
+     * Create the partial function.
+     */
+    if (!metadata.partial) {
+      metadata.partial = renderPartial
+    }
+
+    /**
      * Filter out all partials
      */
     function filterFile (file, done) {
+      // TODO: Automatically register files in /partials?
       done(files[file].partial)
     }
 
@@ -39,43 +71,32 @@ module.exports = function (opts) {
       // Create a copy of the file and delete it from the database.
       var file = clone(files[filename])
       delete files[filename]
-      // Retrieve the extension chain.
-      var extensions = filename.split('.')
 
-      /**
-       * Define the partial as a function.
-       */
-      function executePartial () {
-        var content = file.contents.toString()
-        // Loop through all the extensions in reverse order.
-        for (var i = extensions.length - 1; i > 0; i--) {
-          // Retrieve the transformer.
-          var transformer = getTransformer(extensions[i])
-          if (transformer) {
-            // Construct the options.
-            var options = extend({}, metalsmith.metadata(), file)
-            // Merge in all the arguments from calling the partial.
-            for (var n in arguments) {
-              extend(options, arguments[n])
-            }
-            var result = transformer.render(content, options, options)
-            if (result.body) {
-              content = result.body
-            } else {
-              // There was an error rendering the transformer.
-              break
-            }
-          } else {
-            // The given extension is not supported. Skip it.
-            break
+      // Compile the partial.
+      var info = path.parse(filename)
+      var transform = info.ext ? info.ext.substring(1) : null
+      var transformer = getTransformer(transform)
+      if (transformer) {
+        // Construct the options.
+        var options = extend({}, metalsmith.metadata(), file)
+        // Compile the partial.
+        transformer.compileAsync(file.contents.toString(), options).then(function (template) {
+
+          /**
+           * Define the partial as a function.
+           */
+          function executePartial (locals) {
+            var opt = extend({}, metalsmith.metadata(), metadata.partials[info.name].file, locals)
+            return template.fn.apply(metalsmith.metadata(), [opt])
           }
-        }
-        return content
-      }
 
-      // Add the partial to the metadata partials.
-      metadata.partials[extensions[0]] = executePartial
-      done()
+          metadata.partials[info.name] = executePartial
+          metadata.partials[info.name].file = file
+          done()
+        }, done)
+      } else {
+        done('Transform ' + transform + ' for partial ' + filename + ' is not supported.')
+      }
     }
 
     // Filter out all partials.

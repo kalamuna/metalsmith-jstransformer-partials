@@ -11,9 +11,9 @@
 
 ## Usage
 
-Define partials by adding `partials: true` to your file metadata. Use them through calling `partials[<partialname>`:
+Define partials by adding `partials: true` to your file metadata. Use them through calling `partial(<partialname>)`:
 
-### src/name.swig
+### src/partials/name.swig
 ``` swig
 ---
 partial: true
@@ -27,7 +27,7 @@ name: Default Name
 ### src/index.html.swig
 ``` swig
 <div class="name-wrapper">
-  {{ partials['name']({name:'Real Name'})|safe }}
+  {{ partial('name', {name:'Real Name'})|safe }}
 </div>
 ```
 

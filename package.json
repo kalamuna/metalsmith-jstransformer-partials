@@ -26,7 +26,7 @@
     "clone": "^1.0.2",
     "extend": "^3.0.0",
     "inputformat-to-jstransformer": "^1.1.2",
-    "jstransformer": "0.0.2"
+    "jstransformer": "0.0.*"
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",

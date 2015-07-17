@@ -13,7 +13,7 @@
 
 Define partials by adding `partials: true` to your file metadata. Use them through calling `partial(<partialname>)`:
 
-### src/partials/name.swig
+### `src/partials/name.swig`
 ``` html
 ---
 partial: true
@@ -24,7 +24,7 @@ name: Default Name
 </div>
 ```
 
-### src/index.html.swig
+### `src/index.html.swig`
 ``` html
 <div class="name-wrapper">
   {{ partial('name', {name:'Real Name'})|safe }}

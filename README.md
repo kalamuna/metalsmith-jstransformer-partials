@@ -9,28 +9,6 @@
 
     npm install --save metalsmith-jstransformer-partials
 
-## Usage
-
-Define partials by adding `partials: true` to your file metadata. Use them through calling `partial(<partialname>)`:
-
-### `src/partials/name.swig`
-``` html
----
-partial: true
-name: Default Name
----
-<div class="name">
-  <h2>Name: {{ name }}</h2>
-</div>
-```
-
-### `src/index.html.swig`
-``` html
-<div class="name-wrapper">
-  {{ partial('name', {name:'Real Name'})|safe }}
-</div>
-```
-
 ### CLI
 
 If you are using the command-line version of Metalsmith, you can install via npm, and then add the `metalsmith-jstransformer` key to your `metalsmith.json` file:
@@ -51,6 +29,37 @@ If you are using the JS Api for Metalsmith, then you can require the module and 
 var partials = require('metalsmith-jstransformer-partials');
 
 metalsmith.use(partials());
+```
+
+## Usage
+
+Declare partials by adding `partials: true` to your file metadata. In templates, use the partial through calling `partial(<partialname>)`:
+
+### `src/partials/name.swig`
+``` html
+---
+partial: true
+name: Default Name
+---
+<div class="name">
+  <h2>Name: {{ name }}</h2>
+</div>
+```
+
+### `src/index.html.swig`
+``` html
+<div class="name-wrapper">
+  {{ partial('name', {name:'Real Name'})|safe }}
+</div>
+```
+
+### Result: `out/index.html`
+``` html
+<div class="name-wrapper">
+  <div class="name">
+    <h2>Name: Real Name</h2>
+  </div>
+</div>
 ```
 
 ## License

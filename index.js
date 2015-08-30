@@ -1,11 +1,20 @@
 var jstransformer = require('jstransformer')
 var toTransformer = require('inputformat-to-jstransformer')
 var async = require('async')
-var extend = require('extend')
+var extend = require('extend-shallow')
 var clone = require('clone')
 var path = require('path')
+var minimatch = require('minimatch')
 
+/**
+ * Metalsmith JSTransformer Partials.
+ *
+ * @param [opts] - An array with the provided options:
+ *   - pattern - A pattern of files which will automatically be interpretted as a partial.
+ *   - partials - An existing array of partials
+ */
 module.exports = function (opts) {
+  opts = opts || {}
   var transformers = {}
 
   /**
@@ -25,17 +34,16 @@ module.exports = function (opts) {
   return function (files, metalsmith, done) {
     // Load the default partials.
     var metadata = metalsmith.metadata()
-    metadata.partials = extend({}, metadata.partials || {}, opts || {})
+    metadata.partials = extend({}, metadata.partials || {}, opts.partials || {})
 
     /**
      * Renders a partial from the given name.
      */
     function renderPartial (name) {
-      var part = metalsmith.metadata().partials
       if (!name) {
         throw new Error('When calling .partial(), name is required.')
       }
-      if (name in part) {
+      if (name in metadata.partials) {
         // Construct the partial function arguments.
         var fnarray = []
         for (var i = 1; i < arguments.length; i++) {
@@ -43,7 +51,7 @@ module.exports = function (opts) {
         }
 
         // Call the partial function with the given array arguments.
-        return part[name].apply(metalsmith.metadata(), fnarray)
+        return metadata.partials[name].apply(metalsmith.metadata(), fnarray)
       } else {
         throw new Error('The partial "' + name + '" was not found.')
       }
@@ -60,8 +68,16 @@ module.exports = function (opts) {
      * Filter out all partials
      */
     function filterFile (file, done) {
-      // TODO: Automatically register files in /partials?
-      done(files[file].partial)
+      if (files[file].partial) {
+        // Discover whether it is explicitly declared as a partial.
+        done(true)
+      } else if (opts.pattern) {
+        // Check if it matches the partial pattern.
+        done(minimatch(file, opts.pattern))
+      } else {
+        // The file is not a partial.
+        done(false)
+      }
     }
 
     /**

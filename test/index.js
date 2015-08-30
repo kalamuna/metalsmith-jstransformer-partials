@@ -5,10 +5,11 @@ var Metalsmith = require('metalsmith')
 
 /* globals it describe */
 
-function test (name) {
+function test (name, opts) {
+  opts = opts || {}
   it(name, function (done) {
     Metalsmith('test/fixtures/' + name)
-      .use(partials())
+      .use(partials(opts))
       .use(jstransformer())
       .build(function (err) {
         if (err) {
@@ -23,4 +24,7 @@ function test (name) {
 describe('metalsmith-jstransformer-partials', function (done) {
   test('basic')
   test('call-partial')
+  test('pattern', {
+    pattern: 'partials/*'
+  })
 })

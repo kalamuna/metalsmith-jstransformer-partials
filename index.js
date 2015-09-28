@@ -10,11 +10,13 @@ var minimatch = require('minimatch')
  * Metalsmith JSTransformer Partials.
  *
  * @param [opts] - An array with the provided options:
- *   - pattern - A pattern of files which will automatically be interpretted as a partial.
+ *   - pattern - A pattern of files which will automatically be interpretted as a partial. Defaults to ``
  *   - partials - An existing array of partials
  */
 module.exports = function (opts) {
-  opts = opts || {}
+  opts = extend({
+    pattern: 'partials/*'
+  }, opts)
   var transformers = {}
 
   /**

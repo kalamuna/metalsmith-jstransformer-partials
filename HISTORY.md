@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0: 2015-09-26
+
+- Provide the option `pattern: 'partials/*'` by default
+
 ## v0.1.1: 2015-07-17
 
 - Updated documentation

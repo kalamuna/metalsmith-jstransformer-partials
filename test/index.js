@@ -23,8 +23,9 @@ function test (name, opts) {
 
 describe('metalsmith-jstransformer-partials', function (done) {
   test('basic')
+  test('basic-default')
   test('call-partial')
   test('pattern', {
-    pattern: 'partials/*'
+    pattern: 'new-partials/*'
   })
 })

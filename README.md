@@ -31,12 +31,12 @@ var partials = require('metalsmith-jstransformer-partials');
 var jstransformer = require('metalsmith-jstraxnsformer');
 
 metalsmith.use(partials());
-metalsmith.use(jstransformer())
+metalsmith.use(jstransformer());
 ```
 
 ## Usage
 
-Define partials by adding `partials: true` to your file metadata. The following example using [Swig](https://paularmstrong.github.io/swig/), so ensure you also install [`jstransformer-swig`](https://github.com/jstransformers/jstransformer-swig). To call a partial, invoke `partial(<partialname>, locals)` or `partials[<partialname>](locals):
+Partials are automatically defined in the `partials/` directory, but you are able to define them manually by adding `partials: true` to your file metadata. The following example using [Swig](https://paularmstrong.github.io/swig/), so ensure you also install [`jstransformer-swig`](https://github.com/jstransformers/jstransformer-swig). To call a partial, invoke `partial(<partialname>, locals)` or `partials[<partialname>](locals):
 
 ### src/partials/name.swig
 ``` html
@@ -69,7 +69,7 @@ name: Default Name
 
 ### `.pattern`
 
-The pattern in which to automatically detect partials, without having to set `partial: true`. By default, this is disabled.
+The pattern in which to automatically detect partials, without having to set `partial: true`. Defaults to `partials/*`.
 
 ### `.partials`
 

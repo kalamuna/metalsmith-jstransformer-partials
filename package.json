@@ -1,12 +1,12 @@
 {
   "name": "metalsmith-jstransformer-partials",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Metalsmith JSTransformer Partials",
   "files": [
     "index.js"
   ],
   "scripts": {
-    "test": "mocha --no-timeouts && standard index.js test/index.js"
+    "test": "mocha --no-timeouts && standard"
   },
   "repository": {
     "type": "git",

@@ -97,7 +97,6 @@ module.exports = function (opts) {
         var options = extend({}, metalsmith.metadata(), file)
         // Compile the partial.
         transformer.compileAsync(file.contents.toString(), options).then(function (template) {
-
           /**
            * Define the partial as a function.
            */

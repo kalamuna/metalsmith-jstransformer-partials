@@ -24,7 +24,7 @@ module.exports = function (opts) {
    *
    * @return The JSTransformer; null if it doesn't exist.
    */
-  function getTransformer (name) {
+  function getTransformer(name) {
     if (name in transformers) {
       return transformers[name]
     }
@@ -41,22 +41,25 @@ module.exports = function (opts) {
     /**
      * Renders a partial from the given name.
      */
-    function renderPartial (name) {
+    function renderPartial(name) {
+      // The name is a required input.
       if (!name) {
         throw new Error('When calling .partial(), name is required.')
       }
-      if (name in metadata.partials) {
-        // Construct the partial function arguments.
-        var fnarray = []
-        for (var i = 1; i < arguments.length; i++) {
-          fnarray.push(arguments[i])
-        }
 
-        // Call the partial function with the given array arguments.
-        return metadata.partials[name].apply(metalsmith.metadata(), fnarray)
-      } else {
+      // Ensure the partial is available in the metadata.
+      if (!(name in metadata.partials)) {
         throw new Error('The partial "' + name + '" was not found.')
       }
+
+      // Construct the partial function arguments.
+      var fnarray = []
+      for (var i = 1; i < arguments.length; i++) {
+        fnarray.push(arguments[i])
+      }
+
+      // Call the partial function with the given array arguments.
+      return metadata.partials[name].apply(metalsmith.metadata(), fnarray)
     }
 
     /**
@@ -69,7 +72,7 @@ module.exports = function (opts) {
     /**
      * Filter out all partials
      */
-    function filterFile (file, done) {
+    function filterFile(file, done) {
       if (files[file].partial) {
         // Discover whether it is explicitly declared as a partial.
         done(true)
@@ -85,7 +88,7 @@ module.exports = function (opts) {
     /**
      * Add the given file in as a partial.
      */
-    function addPartial (filename, done) {
+    function addPartial(filename, done) {
       // Create a copy of the file and delete it from the database.
       var file = clone(files[filename])
       delete files[filename]
@@ -102,7 +105,7 @@ module.exports = function (opts) {
           /**
            * Define the partial as a function.
            */
-          function executePartial (locals) {
+          function executePartial(locals) {
             var opt = extend({}, metalsmith.metadata(), metadata.partials[info.name].file, locals)
             return template.fn.apply(metalsmith.metadata(), [opt])
           }

@@ -99,7 +99,10 @@ module.exports = function (opts) {
       var transformer = getTransformer(transform)
       if (transformer) {
         // Construct the options.
-        var options = extend({}, metalsmith.metadata(), file)
+        var options = extend({}, metalsmith.metadata(), file, {
+          filename: path.join(metalsmith.source(), filename)
+        })
+
         // Compile the partial.
         transformer.compileAsync(file.contents.toString(), options).then(function (template) {
           /**

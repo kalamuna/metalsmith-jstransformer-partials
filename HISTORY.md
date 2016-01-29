@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.0: 2015-09-26
+
+- Updated dependencies
+- Add the `filename` as a parameter when compiling the partials
+
 ## v1.0.0: 2015-09-26
 
 - Provide the option `pattern: 'partials/*'` by default

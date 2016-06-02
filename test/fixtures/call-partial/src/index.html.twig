@@ -4,13 +4,13 @@ title: Hello, World!
 <h1>{{ title }}</h1>
 
 <div class="partial-wrapper">
-{{ partial('card', {name:'Updated Name!'})|safe }}
+{{ partial('card', {name:'Updated Name!'})|raw }}
 </div>
 
 <div class="author-wrapper">
-{{ partial('author', {name:'Rob', lastname:'Loach'})|safe }}
+{{ partial('author', {name:'Rob', lastname:'Loach'})|raw }}
 </div>
 
 <div class="partial-wrapper">
-{{ partial('card')|safe }}
+{{ partial('card')|raw }}
 </div>

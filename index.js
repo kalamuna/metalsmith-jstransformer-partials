@@ -46,10 +46,9 @@ module.exports = function (opts) {
       if (!name) {
         throw new Error('When calling .partial(), name is required.')
       }
-      var data = metalsmith.metadata()
 
       // Ensure the partial is available in the metadata.
-      if (!(name in data.partials)) {
+      if (!(name in metalsmith.metadata().partials)) {
         throw new Error('The partial "' + name + '" was not found.')
       }
 
@@ -60,7 +59,7 @@ module.exports = function (opts) {
       }
 
       // Call the partial function with the given array arguments.
-      return data.partials[name].apply(data, fnarray)
+      return metalsmith.metadata().partials[name].apply(metalsmith.metadata(), fnarray)
     }
 
     /**

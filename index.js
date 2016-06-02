@@ -1,9 +1,9 @@
+var path = require('path')
 var jstransformer = require('jstransformer')
 var toTransformer = require('inputformat-to-jstransformer')
 var async = require('async')
 var extend = require('extend-shallow')
 var clone = require('clone')
-var path = require('path')
 var minimatch = require('minimatch')
 
 /**
@@ -46,9 +46,10 @@ module.exports = function (opts) {
       if (!name) {
         throw new Error('When calling .partial(), name is required.')
       }
+      var data = metalsmith.metadata()
 
       // Ensure the partial is available in the metadata.
-      if (!(name in metadata.partials)) {
+      if (!(name in data.partials)) {
         throw new Error('The partial "' + name + '" was not found.')
       }
 
@@ -59,7 +60,7 @@ module.exports = function (opts) {
       }
 
       // Call the partial function with the given array arguments.
-      return metadata.partials[name].apply(metalsmith.metadata(), fnarray)
+      return data.partials[name].apply(data, fnarray)
     }
 
     /**
@@ -75,14 +76,13 @@ module.exports = function (opts) {
     function filterFile(file, done) {
       if (files[file].partial) {
         // Discover whether it is explicitly declared as a partial.
-        done(true)
+        return done(null, files[file].partial)
       } else if (opts.pattern) {
         // Check if it matches the partial pattern.
-        done(minimatch(file, opts.pattern))
-      } else {
-        // The file is not a partial.
-        done(false)
+        return done(null, minimatch(file, opts.pattern))
       }
+      // The file is not a partial.
+      done(null, false)
     }
 
     /**
@@ -108,13 +108,11 @@ module.exports = function (opts) {
           /**
            * Define the partial as a function.
            */
-          function executePartial(locals) {
-            var opt = extend({}, metalsmith.metadata(), metadata.partials[info.name].file, locals)
-            return template.fn.apply(metalsmith.metadata(), [opt])
+          metalsmith.metadata().partials[info.name] = function executePartial(locals) {
+            var opt = extend({}, options, locals)
+            return template.fn.apply(file, [opt])
           }
-
-          metadata.partials[info.name] = executePartial
-          metadata.partials[info.name].file = file
+          metalsmith.metadata().partials[info.name].file = file
           done()
         }, done)
       } else {
@@ -123,7 +121,12 @@ module.exports = function (opts) {
     }
 
     // Filter out all partials.
-    async.filter(Object.keys(files), filterFile, function (partials) {
+    async.filter(Object.keys(files), filterFile, function (err, partials) {
+      // Error handling.
+      if (err) {
+        return done(err)
+      }
+
       // Add all of the partials to the metadata.
       async.map(partials, addPartial, done)
     })

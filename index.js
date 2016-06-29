@@ -15,7 +15,7 @@ var minimatch = require('minimatch')
  */
 module.exports = function (opts) {
   opts = extend({
-    pattern: 'partials/*'
+    pattern: 'partials/**'
   }, opts)
   var transformers = {}
 

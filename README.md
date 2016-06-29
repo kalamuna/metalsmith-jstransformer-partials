@@ -69,7 +69,7 @@ name: Default Name
 
 ### `.pattern`
 
-The pattern in which to automatically detect partials, without having to set `partial: true`. Defaults to `partials/*`.
+The pattern in which to automatically detect partials, without having to set `partial: true`. Defaults to `partials/**`.
 
 ### `.partials`
 

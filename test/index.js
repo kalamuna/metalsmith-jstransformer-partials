@@ -30,6 +30,7 @@ function test(name, opts) {
 describe('metalsmith-jstransformer-partials', function () {
   test('basic')
   test('basic-default')
+  test('subfolder')
   test('call-partial')
   test('pattern', {
     pattern: 'new-partials/*'

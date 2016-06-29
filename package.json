@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-jstransformer-partials",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Metalsmith JSTransformer Partials",
   "files": [
     "index.js"

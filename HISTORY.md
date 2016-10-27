@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.2: 2016-10-27
+
+- Updated dependencies
+
 ## v1.2.1: 2016-06-29
 
 - Fix partials being defined in sub-folders

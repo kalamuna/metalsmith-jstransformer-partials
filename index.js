@@ -107,7 +107,7 @@ module.exports = function (opts) {
           /**
            * Define the partial as a function.
            */
-          metalsmith.metadata().partials[info.name] = function executePartial(locals) {
+          metalsmith.metadata().partials[info.name] = function (locals) {
             var opt = extend({}, options, locals)
             return template.fn.apply(file, [opt])
           }

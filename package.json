@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-jstransformer-partials",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Metalsmith JSTransformer Partials",
   "files": [
     "index.js"
@@ -22,20 +22,20 @@
   },
   "homepage": "https://github.com/RobLoach/metalsmith-jstransformer-partials",
   "dependencies": {
-    "async": "^2.0.0-rc.5",
-    "clone": "^1.0.2",
+    "async": "^2.1.2",
+    "clone": "^2.0.0",
     "extend-shallow": "^2.0.1",
-    "inputformat-to-jstransformer": "^1.1.5",
-    "jstransformer": "0.0.4",
-    "minimatch": "^3.0.0"
+    "inputformat-to-jstransformer": "^1.1.8",
+    "jstransformer": "1.0.0",
+    "minimatch": "^3.0.3"
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
     "jstransformer-twig": "^0.1.3",
     "metalsmith": "2.*",
-    "metalsmith-jstransformer": "^0.6.0",
+    "metalsmith-jstransformer": "^0.7.2",
     "mocha": "*",
-    "rimraf": "^2.5.2",
-    "xo": "^0.15.1"
+    "rimraf": "^2.5.4",
+    "xo": "^0.17.0"
   }
 }

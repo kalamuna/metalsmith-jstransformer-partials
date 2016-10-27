@@ -52,7 +52,7 @@ name: Default Name
 ### src/index.html.swig
 ``` html
 <div class="name-wrapper">
-{{ partial('name', { name: 'TJ Holowaychuk' })|safe }}
+  {{ partial('name', { name: 'TJ Holowaychuk' })|safe }}
 </div>
 ```
 

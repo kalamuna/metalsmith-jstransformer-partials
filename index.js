@@ -115,7 +115,8 @@ module.exports = function (opts) {
           done()
         }, done)
       } else {
-        done('Transform ' + transform + ' for partial ' + filename + ' is not supported.')
+        // Do not error out when the Transformer is not found.
+        done()
       }
     }
 

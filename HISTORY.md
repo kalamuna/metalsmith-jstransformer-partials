@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.0: 2017-07-26
+
+- Update dependencies
+
 ## v1.2.3: 2016-12-15
 
 - Ignore file when transform is not found

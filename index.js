@@ -1,10 +1,12 @@
-var path = require('path')
-var jstransformer = require('jstransformer')
-var toTransformer = require('inputformat-to-jstransformer')
-var async = require('async')
-var extend = require('extend-shallow')
-var clone = require('clone')
-var minimatch = require('minimatch')
+'use strict'
+
+const path = require('path')
+const jstransformer = require('jstransformer')
+const toTransformer = require('inputformat-to-jstransformer')
+const async = require('async')
+const extend = require('extend-shallow')
+const clone = require('clone')
+const minimatch = require('minimatch')
 
 /**
  * Metalsmith JSTransformer Partials.
@@ -17,7 +19,7 @@ module.exports = function (opts) {
   opts = extend({
     pattern: 'partials/**'
   }, opts)
-  var transformers = {}
+  const transformers = {}
 
   /**
    * Get the transformer from the given name.
@@ -28,14 +30,14 @@ module.exports = function (opts) {
     if (name in transformers) {
       return transformers[name]
     }
-    var transformer = toTransformer(name)
+    const transformer = toTransformer(name)
     transformers[name] = transformer ? jstransformer(transformer) : false
     return transformers[name]
   }
 
   return function (files, metalsmith, done) {
     // Load the default partials.
-    var metadata = metalsmith.metadata()
+    const metadata = metalsmith.metadata()
     metadata.partials = extend({}, metadata.partials || {}, opts.partials || {})
 
     /**
@@ -53,8 +55,8 @@ module.exports = function (opts) {
       }
 
       // Construct the partial function arguments.
-      var fnarray = []
-      for (var i = 1; i < arguments.length; i++) {
+      const fnarray = []
+      for (let i = 1; i < arguments.length; i++) {
         fnarray.push(arguments[i])
       }
 
@@ -89,26 +91,26 @@ module.exports = function (opts) {
      */
     function addPartial(filename, done) {
       // Create a copy of the file and delete it from the database.
-      var file = clone(files[filename])
+      const file = clone(files[filename])
       delete files[filename]
 
       // Compile the partial.
-      var info = path.parse(filename)
-      var transform = info.ext ? info.ext.substring(1) : null
-      var transformer = getTransformer(transform)
+      const info = path.parse(filename)
+      const transform = info.ext ? info.ext.substring(1) : null
+      const transformer = getTransformer(transform)
       if (transformer) {
         // Construct the options.
-        var options = extend({}, metalsmith.metadata(), file, {
+        const options = extend({}, metalsmith.metadata(), file, {
           filename: path.join(metalsmith.source(), filename)
         })
 
         // Compile the partial.
-        transformer.compileAsync(file.contents.toString(), options).then(function (template) {
+        transformer.compileAsync(file.contents.toString(), options).then(template => {
           /**
            * Define the partial as a function.
            */
-          metalsmith.metadata().partials[info.name] = function (locals) {
-            var opt = extend({}, options, locals)
+          metalsmith.metadata().partials[info.name] = locals => {
+            const opt = extend({}, options, locals)
             return template.fn.apply(file, [opt])
           }
           metalsmith.metadata().partials[info.name].file = file
@@ -121,7 +123,7 @@ module.exports = function (opts) {
     }
 
     // Filter out all partials.
-    async.filter(Object.keys(files), filterFile, function (err, partials) {
+    async.filter(Object.keys(files), filterFile, (err, partials) => {
       // Error handling.
       if (err) {
         return done(err)

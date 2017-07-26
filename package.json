@@ -34,9 +34,9 @@
     "assert-dir-equal": "^1.0.1",
     "jstransformer-twig": "^1.2.0",
     "metalsmith": "2.*",
-    "metalsmith-jstransformer": "^0.9.0",
+    "metalsmith-jstransformer": "^0.11.0",
     "mocha": "*",
     "rimraf": "^2.5.4",
-    "xo": "^0.17.0"
+    "xo": "^0.18.2"
   }
 }

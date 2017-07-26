@@ -1,23 +1,23 @@
-var assertDir = require('assert-dir-equal')
-var partials = require('..')
-var jstransformer = require('metalsmith-jstransformer')
-var Metalsmith = require('metalsmith')
-var rmdir = require('rimraf')
+const assertDir = require('assert-dir-equal')
+const partials = require('..')
+const jstransformer = require('metalsmith-jstransformer')
+const Metalsmith = require('metalsmith')
+const rmdir = require('rimraf')
 
 /* globals it describe */
 
 function test(name, opts) {
   opts = opts || {}
-  it(name, function (done) {
+  it(name, done => {
     // Clean the build directory.
-    var testPath = 'test/fixtures/' + name
+    const testPath = 'test/fixtures/' + name
     rmdir.sync(testPath + '/build')
 
     // Build and run Metalsmith
     new Metalsmith(testPath)
       .use(partials(opts))
       .use(jstransformer())
-      .build(function (err) {
+      .build(err => {
         if (err) {
           return done(err)
         }
@@ -27,7 +27,7 @@ function test(name, opts) {
   })
 }
 
-describe('metalsmith-jstransformer-partials', function () {
+describe('metalsmith-jstransformer-partials', () => {
   test('basic')
   test('basic-default')
   test('subfolder')
